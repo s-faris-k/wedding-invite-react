@@ -51,7 +51,7 @@ const weddingConfig = {
 
   // downloads is optional — remove this whole array to hide the section
   downloads: [
-    { icon: '💌', label: 'Invite card', buttonText: 'Download Card', href: '#' },
+    { icon: '💌', label: 'Invite card', buttonText: 'Download Card', href: "/wedding-invitation.jpg" },
     // { icon: '🎬', label: 'Save the date video preview', buttonText: 'Watch Video', href: '#' },
   ],
 }
