@@ -1,5 +1,8 @@
 import { useCountdown, pad } from '../hooks/useCountdown'
+import { useEffect, useState } from 'react'
 import weddingConfig from '../weddingConfig'
+import SlideButton from './SlideButton'
+import { toggle, getIsPlaying, subscribe } from '../lib/audioController'
 
 const PETALS = [
   { emoji: '🌸', left: '10%', delay: '0s' },
@@ -26,9 +29,7 @@ export default function Hero({ onAttendClick }) {
         </div>
       ))}
 
-      <div className="audio-pill">
-        <span className="dot" /> Nikkah Nasheed ♪
-      </div>
+      <AudioPill />
       <div style={{ clear: 'both' }} />
 
       <div className="bismillah">بسم الله الرحمن الرحيم</div>
@@ -73,13 +74,31 @@ export default function Hero({ onAttendClick }) {
       </div>
 
       <div className="attend-row">
-        <button className="chevron-btn" onClick={onAttendClick} aria-label="Scroll to details">
-          ›
-        </button>
-        <span className="attend-text">Yeah, I am attending</span>
+        <SlideButton onComplete={onAttendClick} />
       </div>
 
       <div className="arch" />
     </section>
   )
 }
+
+function AudioPill() {
+  const [isPlaying, setIsPlaying] = useState(getIsPlaying())
+
+  useEffect(() => {
+    const unsub = subscribe(({ isPlaying }) => setIsPlaying(!!isPlaying))
+    return unsub
+  }, [])
+
+  return (
+    <button
+      className="audio-pill"
+      onClick={() => toggle()}
+      aria-pressed={isPlaying}
+      aria-label="Toggle audio playback"
+    >
+      <span className={`dot ${isPlaying ? 'playing' : ''}`} /> Nikkah Nasheed ♪
+    </button>
+  )
+}
+
