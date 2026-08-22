@@ -4,7 +4,7 @@ const audio = new Audio(AUDIO_SRC)
 audio.loop = true
 audio.preload = 'auto'
 
-let isPlaying = false
+let isPlaying = true
 
 const eventTarget = new EventTarget()
 

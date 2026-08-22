@@ -1,20 +1,26 @@
-import { useEffect, useState } from 'react'
-import audio, { play, subscribe, getIsPlaying } from '../lib/audioController'
+import { useEffect } from "react";
+import { play } from "../lib/audioController";
 
 export default function AudioPlayer() {
-  const [playing, setPlaying] = useState(getIsPlaying())
-
   useEffect(() => {
-    const unsub = subscribe(({ isPlaying }) => setPlaying(!!isPlaying))
-    // try to autoplay on mount (may be blocked by browser)
-    play()
-    return unsub
-  }, [])
+    // Try autoplay (works for some browsers/returning visitors)
+    play();
 
-  return (
-    <div aria-hidden="true" style={{ display: 'none' }}>
-      {/* keep a reference to the audio element for debugging if needed */}
-      <audio src={audio.src} loop />
-    </div>
-  )
+    // Unlock audio on the first user interaction
+    const unlock = () => {
+      play();
+    };
+
+    window.addEventListener("pointerdown", unlock, { once: true });
+    window.addEventListener("touchstart", unlock, { once: true });
+    window.addEventListener("keydown", unlock, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+  }, []);
+
+  return null;
 }
